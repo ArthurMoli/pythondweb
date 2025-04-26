@@ -7,9 +7,9 @@
     <div class="course-header-content">
         <h1 class="course-detail-title">{{ course.title }}</h1>
         <div class="course-detail-meta">
-            <div class="course-code">{{ course.code }}</div>
+            <div class="course-code">ID: {{ course.code }}</div>
             <div class="course-instructor">Taught by {{ course.instructor }}</div>
-            {% if course.semester %}<div class="course-semester">{{ course.semester }}</div>{% endif %}
+            {% if course.semester %}<div class="course-semester">SEMESTRE: {{ course.semester }}</div>{% endif %}
         </div>
         
         <div class="course-ratings">

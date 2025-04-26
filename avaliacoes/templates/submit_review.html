@@ -83,7 +83,7 @@
   </head>
   <body>
     <div class="container">
-      <h1>Avaliar {{ disciplina.nome }}</h1>
+      <h1>Avaliar {{ course.title }}</h1>
 
       <form method="post">
         {% csrf_token %} {{ form.as_p }}
@@ -91,7 +91,7 @@
       </form>
 
       <div class="cancelar">
-        <a href="{% url 'detalhes_disciplina' disciplina.id %}">Cancelar</a>
+        <a href="{% url 'course_detail' course.id %}">Cancelar</a>
       </div>
     </div>
   </body>

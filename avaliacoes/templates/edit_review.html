@@ -66,7 +66,7 @@
   </head>
   <body>
     <div class="container">
-      <h1>Editar feedback de {{ disciplina.nome }}</h1>
+      <h1>Editar feedback de {{ course.title }}</h1>
       <form method="post">
         {% csrf_token %} {{ form.as_p }}
         <button type="submit">Salvar alterações</button>

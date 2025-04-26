@@ -65,9 +65,7 @@
       <form method="post">
         {% csrf_token %}
         <button type="submit">Sim, excluir</button>
-        <a href="{% url 'detalhes_disciplina' feedback.disciplina.id %}"
-          >Cancelar</a
-        >
+        <a href="{% url 'course_detail' review.course.id %}">Cancelar</a>
       </form>
     </div>
   </body>
