@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} | PulseProf{% endblock %}
+
+{% block content %}
+<div class="course-header-container">
+    <div class="course-header-content">
+        <h1 class="course-detail-title">{{ course.title }}</h1>
+        <div class="course-detail-meta">
+            <div class="course-code">{{ course.code }}</div>
+            <div class="course-instructor">Taught by {{ course.instructor }}</div>
+            {% if course.semester %}<div class="course-semester">{{ course.semester }}</div>{% endif %}
+        </div>
+        
+        <div class="course-ratings">
+            <div class="rating-summary">
+                <div class="rating-average">
+                    {{ course.average_rating|floatformat:1 }}
+                </div>
+                <div class="stars">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= course.average_rating|floatformat:"0" %}
+                            <span>⭐</span>
+                        {% else %}
+                            <span class="text-muted">☆</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="rating-count">{{ course.total_reviews }} review{{ course.total_reviews|pluralize }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="course-actions">
+    {% if can_review %}
+        <a href="{% url 'submit_review' course.id %}" class="btn btn-primary">Write a Review</a>
+    {% elif user_review %}
+        <div class="user-review-actions">
+            <span class="your-review-badge">You've reviewed this course</span>
+            <a href="{% url 'edit_review' course.id %}" class="btn btn-outline">Edit Your Review</a>
+            <a href="{% url 'delete_review' course.id %}" class="btn btn-outline btn-danger-text">Delete</a>
+        </div>
+    {% elif not user.is_authenticated %}
+        <a href="{% url 'login' %}" class="btn btn-primary">Login to Write a Review</a>
+    {% endif %}
+</div>
+
+{% if course.description %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">About this course</h2>
+    </div>
+    <p>{{ course.description }}</p>
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Student Reviews</h2>
+    </div>
+    
+    {% if reviews %}
+        <div class="reviews-list">
+            {% for review in reviews %}
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            {% if review.anonymous %}
+                                <div class="anonymous-badge">Anonymous Student</div>
+                            {% else %}
+                                <div class="reviewer-name">{{ review.student.username }}</div>
+                            {% endif %}
+                            <div class="review-date">{{ review.date_submitted|date:"M d, Y" }}</div>
+                        </div>
+                        <div class="review-rating">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                    <span class="star">⭐</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    {% if review.feedback %}
+                    <div class="review-content">
+                        {{ review.feedback }}
+                    </div>
+                    {% endif %}
+                    
+                    {% if review.student == user %}
+                    <div class="review-actions">
+                        <a href="{% url 'edit_review' course.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'delete_review' course.id %}" class="btn btn-link btn-danger-text">Delete</a>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-reviews">
+            <div class="empty-icon">💬</div>
+            <h3>No reviews yet</h3>
+            <p>Be the first to share your experience with this course!</p>
+            
+            {% if can_review %}
+                <a href="{% url 'submit_review' course.id %}" class="btn btn-primary mt-4">Write a Review</a>
+            {% elif not user.is_authenticated %}
+                <a href="{% url 'login' %}" class="btn btn-primary mt-4">Login to Write a Review</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .course-header-container {
+        background-color: white;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+    
+    .course-header-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .course-detail-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 0.75rem;
+    }
+    
+    .course-detail-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .course-instructor {
+        color: var(--gray-700);
+        font-size: 0.9375rem;
+    }
+    
+    .course-semester {
+        color: var(--gray-600);
+        font-size: 0.9375rem;
+    }
+    
+    .course-ratings {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+    
+    .rating-summary {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .rating-average {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        line-height: 1;
+    }
+    
+    .stars {
+        font-size: 1.25rem;
+    }
+    
+    .rating-count {
+        color: var(--gray-600);
+        font-size: 0.875rem;
+    }
+    
+    .course-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1.5rem;
+    }
+    
+    .user-review-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .your-review-badge {
+        font-size: 0.875rem;
+        color: var(--gray-600);
+    }
+    
+    .btn-danger-text {
+        color: var(--danger);
+    }
+    
+    .reviews-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .review-item {
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--gray-200);
+    }
+    
+    .review-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+    }
+    
+    .reviewer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .reviewer-name {
+        font-weight: 600;
+        color: var(--gray-800);
+    }
+    
+    .anonymous-badge {
+        font-weight: 500;
+        color: var(--gray-500);
+        font-style: italic;
+    }
+    
+    .review-date {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+    }
+    
+    .review-rating {
+        font-size: 1rem;
+    }
+    
+    .review-content {
+        color: var(--gray-700);
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+    
+    .review-actions {
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .empty-reviews {
+        text-align: center;
+        padding: 3rem 0;
+    }
+    
+    .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--gray-400);
+    }
+    
+    .empty-reviews h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: 0.5rem;
+    }
+    
+    .empty-reviews p {
+        color: var(--gray-500);
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}

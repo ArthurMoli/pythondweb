@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        padding: 12px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      label {
+        font-weight: bold;
+        color: #444;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .message {
+        text-align: center;
+        margin-top: 15px;
+      }
+
+      .message a {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .message a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Login</h2>
+
+      <form method="post">
+        {% csrf_token %} {{ form.as_p }}
+        <button type="submit">Entrar</button>
+      </form>
+
+      <div class="message">
+        <a href="{% url 'register' %}"
+          >Ainda não tem uma conta? Cadastre-se aqui</a
+        >
+      </div>
+    </div>
+  </body>
+</html>

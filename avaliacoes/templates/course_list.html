@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} | PulseProf{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Explore Courses</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Find courses to review</h2>
+    </div>
+    
+    {% if courses %}
+        <div class="course-grid">
+            {% for course in courses %}
+                <a href="{% url 'course_detail' course.id %}" class="course-card">
+                    <div class="course-header">
+                        <span class="course-code">{{ course.code }}</span>
+                        {% if course.avg_rating %}
+                            <div class="stars">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= course.avg_rating|floatformat:"0" %}
+                                        <span>⭐</span>
+                                    {% else %}
+                                        <span class="text-muted">☆</span>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="rating-value">{{ course.avg_rating|floatformat:1 }}</span>
+                            </div>
+                        {% else %}
+                            <span class="no-ratings">No ratings yet</span>
+                        {% endif %}
+                    </div>
+                    <h3 class="course-title">{{ course.title }}</h3>
+                    <p class="course-instructor">{{ course.instructor }}</p>
+                    <div class="course-meta">
+                        <span class="badge badge-primary">{{ course.num_reviews }} review{{ course.num_reviews|pluralize }}</span>
+                        {% if course.semester %}
+                            <span class="course-semester">{{ course.semester }}</span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📚</div>
+            <h3>No courses available</h3>
+            <p>There are no courses in the system yet.</p>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .course-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .course-card {
+        background-color: white;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--gray-200);
+        padding: 1.25rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .course-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary-light);
+    }
+    
+    .course-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+    
+    .course-code {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--primary);
+        background-color: var(--gray-100);
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--radius-sm);
+    }
+    
+    .rating-value {
+        margin-left: 0.25rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--gray-600);
+    }
+    
+    .no-ratings {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+    }
+    
+    .course-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--gray-800);
+        margin-bottom: 0.25rem;
+    }
+    
+    .course-instructor {
+        font-size: 0.875rem;
+        color: var(--gray-600);
+        margin-bottom: 0.75rem;
+    }
+    
+    .course-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+    }
+    
+    .course-semester {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem 0;
+    }
+    
+    .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--gray-400);
+    }
+    
+    .empty-state h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: 0.5rem;
+    }
+    
+    .empty-state p {
+        color: var(--gray-500);
+    }
+</style>
+{% endblock %}
