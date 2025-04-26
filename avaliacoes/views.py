@@ -125,3 +125,21 @@ def delete_review(request, course_id):
         'page_title': 'Confirm Deletion'
     }
     return render(request, 'delete_confirm.html', context)
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}! You can now sign in.')
+            
+            # Automatically log in the user after registration
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            
+            return redirect('course_list')
+    else:
+        form = UserCreationForm()
+    # Change this line from 'register.html' to the specific path
+    return render(request, 'registration/register.html', {'form': form, 'page_title': 'Sign Up'})

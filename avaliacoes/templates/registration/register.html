@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up | PulseProf{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Create an Account</h2>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="alert alert-error">
+                    {{ form.username.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.password1.id_for_label }}">Password</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <div class="alert alert-error">
+                    {{ form.password1.errors }}
+                </div>
+            {% endif %}
+            {% if form.password1.help_text %}
+                <div class="help-text">
+                    {{ form.password1.help_text|safe }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <div class="alert alert-error">
+                    {{ form.password2.errors }}
+                </div>
+            {% endif %}
+            {% if form.password2.help_text %}
+                <div class="help-text">
+                    {{ form.password2.help_text|safe }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+    
+    <div class="mt-4 text-center">
+        <p>Already have an account? <a href="{% url 'login' %}">Log In</a></p>
+    </div>
+</div>
+
+<style>
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    input {
+        padding: 0.625rem;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--radius-md);
+        width: 100%;
+        font-size: 1rem;
+    }
+    
+    .help-text {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        margin-top: 0.5rem;
+    }
+    
+    .alert-error {
+        background-color: #fee2e2;
+        color: #991b1b;
+        padding: 0.5rem;
+        border-radius: var(--radius-md);
+        margin-top: 0.5rem;
+    }
+    
+    button {
+        margin-top: 1rem;
+    }
+</style>
+{% endblock %}
